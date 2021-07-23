@@ -26,7 +26,7 @@ class _BroadcastScreenState extends State<BroadcastScreen> {
   void dispose() {
     // clear users
     _users.clear();
-    // destroy sdk and leave channel
+    // destroy the engine when we leave the screen
     _engine!.destroy();
     super.dispose();
   }
@@ -43,7 +43,7 @@ class _BroadcastScreenState extends State<BroadcastScreen> {
     await _engine!.enableVideo();
 
     await _engine!.setChannelProfile(ChannelProfile
-        .LiveBroadcasting); // what kind of channel we gona have so we gonna have boradcast profile
+        .LiveBroadcasting); // what kind of channel we gonna have so we gonna have boradcast profile
     if (widget.isBroadcaster) { // user's roles
       await _engine!.setClientRole(ClientRole.Broadcaster);
     } else {
@@ -173,7 +173,7 @@ class _BroadcastScreenState extends State<BroadcastScreen> {
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = []; //all the views we get
     if (widget.isBroadcaster) {
-      list.add(RtcLocalView.SurfaceView());
+      list.add(RtcLocalView.SurfaceView()); //make user the camera view is visible
     }
     _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
     return list;
@@ -243,8 +243,8 @@ class _BroadcastScreenState extends State<BroadcastScreen> {
   }
 
   void _onSwitchCamera() {
-    if (streamId != null)
-      _engine?.sendStreamMessage(streamId!, "mute user blet");
-    //_engine.switchCamera();
+    // if (streamId != null)
+    //   _engine?.sendStreamMessage(streamId!, "mute user blet");
+    _engine!.switchCamera();
   }
 }
